@@ -22,7 +22,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter	
-public class ParkingCheck {
+public class ParkingState {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,6 +31,6 @@ public class ParkingCheck {
 	@Column(name="creation_date")
 	private ZonedDateTime creationDate;
 	
-	@OneToMany(mappedBy="parkingCheck")
+	@OneToMany(mappedBy="parkingState")
 	private Set<SlotState> slotStates;
 }

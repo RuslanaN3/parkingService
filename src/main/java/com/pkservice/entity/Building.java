@@ -29,7 +29,7 @@ public class Building {
 	private long id;
 	
 	@Column
-	private String name;
+	private String buildingName;
 	
 	@OneToMany(mappedBy = "building")
 	private Set<Section> sections;

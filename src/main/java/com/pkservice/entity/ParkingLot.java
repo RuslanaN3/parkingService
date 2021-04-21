@@ -38,7 +38,7 @@ public class ParkingLot {
 	
 	@ManyToMany
 	@JoinTable(
-			name="parkinglot_building",
+			name="parking_lot_building",
 			joinColumns=@JoinColumn(name="parking_lot_id"),
 			inverseJoinColumns=@JoinColumn(name="building_id"))
 	private Set<Building> buildings;

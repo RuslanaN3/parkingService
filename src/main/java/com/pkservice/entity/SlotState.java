@@ -1,6 +1,8 @@
 package com.pkservice.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,7 +32,8 @@ public class SlotState {
 	private ParkingSlot parkingSlot;
 	
 	@ManyToOne
-	private ParkingCheck parkingCheck;
+	private ParkingState parkingState;
 	
+	@Enumerated(EnumType.STRING)
 	private State state;
 }
