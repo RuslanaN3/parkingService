@@ -1,5 +1,6 @@
 package com.pkservice.entity;
 
+import com.pkservice.enums.State;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -21,14 +22,15 @@ public class ParkingSlot {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@Column(name="slot_number")
+	@Column
 	private long slotNumber;
+
+	@Column
+	@Enumerated(EnumType.STRING)
+	private State slotState;
 	
 	@ManyToOne
 	private ParkingLot parkingLot;
-	
-	@OneToMany(mappedBy="parkingSlot")
-	private Set<SlotState> slotStates;
 
 	@ManyToOne
 	private DataSource dataSource;

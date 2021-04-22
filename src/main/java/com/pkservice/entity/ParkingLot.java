@@ -30,8 +30,8 @@ public class ParkingLot {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@Column
-	private String type;
+	@Column(name="lot_type")
+	private String lotType;
 	
 	@OneToMany(mappedBy="parkingLot")
 	private Set<ParkingSlot> parkingSlots;
