@@ -4,8 +4,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ParkingSlotService {
 
-    public boolean saveSensorData();
+    boolean saveSensorData();
 
-    public Object saveCamData(MultipartFile image);
+    Object saveCamData(MultipartFile image);
 
+    Object recognise(MultipartFile image);
 }

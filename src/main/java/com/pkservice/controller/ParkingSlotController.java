@@ -31,6 +31,8 @@ public class ParkingSlotController {
     @Autowired
     private ModelMapper modelMapper;
 
+    // PatchMapping("/sensors") updateParkingSlotsState
+    // maybe another controller like "ParkingSlotStateController" ?
     @PostMapping("/sensors-data")
     public ResponseEntity<List<ParkingSlotDto>> saveSensorsData() throws FileNotFoundException {
         //
@@ -50,5 +52,12 @@ public class ParkingSlotController {
     @PostMapping(value = "/cam-data", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity saveCamData(@RequestPart("image") MultipartFile image) {
         return ResponseEntity.ok().body(parkingSlotService.saveCamData(image));
+    }
+
+
+    //should not be there
+    @PostMapping(value = "/car", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity recognize(@RequestPart("image") MultipartFile image) {
+        return ResponseEntity.ok().body(parkingSlotService.recognise(image));
     }
 }
