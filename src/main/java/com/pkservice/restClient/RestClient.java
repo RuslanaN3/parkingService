@@ -1,6 +1,11 @@
 package com.pkservice.restClient;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pkservice.dto.ParkingLotUpdateDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,13 +20,19 @@ public class RestClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Object getParkingSlotsStatePrediction(MultipartFile image) {
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public ParkingLotUpdateDto getParkingSlotsStatusPrediction(MultipartFile image) {
         String url = "http://localhost:5000/api/predict";
 
         MultiValueMap<String, Object> fileValueMap = new LinkedMultiValueMap<>();
         fileValueMap.add("file", image.getResource());
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(fileValueMap, setHeaders());
-        return restTemplate.exchange(url, HttpMethod.POST, requestEntity, Object.class).getBody();
+        Object res = restTemplate.exchange(url, HttpMethod.POST, requestEntity, JsonNode.class).getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
+        ParkingLotUpdateDto parkingLotUpdateDto = objectMapper.convertValue(res, ParkingLotUpdateDto.class);
+        return parkingLotUpdateDto;
     }
 
     public Object getPlateRecognitionResults(MultipartFile image) {

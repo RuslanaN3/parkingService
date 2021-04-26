@@ -6,4 +6,6 @@ import java.util.List;
 public interface ParkingLotService {
 
     List<ParkingLotDto> findAll();
+
+    //List<ParkingLotDto> updateParkingLotStatusCamData(Long parkingLotId, ParkingLotDto parkingLotDto);
 }

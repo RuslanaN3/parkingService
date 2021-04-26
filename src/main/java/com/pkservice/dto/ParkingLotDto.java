@@ -16,7 +16,7 @@ public class ParkingLotDto {
 
     private String lotType;
 
-    private Set<ParkingSlotDto> parkingSlots;
+    private Set<ParkingSlotCsvDto> parkingSlots;
 
     private Set<BuildingDto> buildings;
 }

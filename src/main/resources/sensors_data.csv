@@ -1,4 +1,4 @@
-id;slot_number;slot_state;parking_lot_id;data_source_id
+id;slot_number;slot_status;parking_lot_id;data_source_id
 1;3918;VACANT;1;1
 2;3563;VACANT;2;1
 3;4405;VACANT;3;1

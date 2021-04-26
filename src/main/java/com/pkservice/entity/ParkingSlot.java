@@ -1,7 +1,7 @@
 package com.pkservice.entity;
 
-import com.pkservice.enums.State;
-import java.util.Set;
+
+import com.pkservice.enums.Status;
 
 import javax.persistence.*;
 
@@ -27,7 +27,7 @@ public class ParkingSlot {
 
 	@Column
 	@Enumerated(EnumType.STRING)
-	private State slotState;
+	private Status slotStatus;
 	
 	@ManyToOne
 	private ParkingLot parkingLot;

@@ -1,5 +1,5 @@
 package com.pkservice.enums;
 
-public enum State {
+public enum Status {
 	OCCUPIED, VACANT
 }
