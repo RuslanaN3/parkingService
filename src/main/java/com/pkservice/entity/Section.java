@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="section")
+@Table(name="sections")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -26,6 +26,8 @@ public class Section {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
+
+	private String sectionNumber;
 	
 	@ManyToOne
 	private Building building;

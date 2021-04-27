@@ -24,6 +24,6 @@ public class DataSource {
     private String sourceName;
 
     @OneToMany(mappedBy = "dataSource")
-    private Set<ParkingSlot> parkingSlots;
+    private Set<ParkingLot> parkingLots;
 
 }

@@ -3,9 +3,11 @@ package com.pkservice.restClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pkservice.dto.ParkingLotUpdateDto;
-import org.modelmapper.ModelMapper;
+import com.pkservice.dto.PlateRecognitionResponse;
+import com.pkservice.dto.PlateResultDto;
+import java.util.Comparator;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,9 +22,6 @@ public class RestClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     public ParkingLotUpdateDto getParkingSlotsStatusPrediction(MultipartFile image) {
         String url = "http://localhost:5000/api/predict";
 
@@ -31,11 +30,10 @@ public class RestClient {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(fileValueMap, setHeaders());
         Object res = restTemplate.exchange(url, HttpMethod.POST, requestEntity, JsonNode.class).getBody();
         ObjectMapper objectMapper = new ObjectMapper();
-        ParkingLotUpdateDto parkingLotUpdateDto = objectMapper.convertValue(res, ParkingLotUpdateDto.class);
-        return parkingLotUpdateDto;
+        return objectMapper.convertValue(res, ParkingLotUpdateDto.class);
     }
 
-    public Object getPlateRecognitionResults(MultipartFile image) {
+    public PlateResultDto getPlateRecognitionResults(MultipartFile image) {
         String url = "https://api.platerecognizer.com/v1/plate-reader/";
         String token = "49618803d2b549de1dc84d8051ebb44fcdf3167a";
 
@@ -44,7 +42,16 @@ public class RestClient {
         MultiValueMap<String, Object> fileValueMap = new LinkedMultiValueMap<>();
         fileValueMap.add("upload", image.getResource());
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(fileValueMap, headers);
-        return restTemplate.exchange(url, HttpMethod.POST, requestEntity, Object.class).getBody();
+        Object res = restTemplate.exchange(url, HttpMethod.POST, requestEntity, JsonNode.class).getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
+        return getPlateWithMaxScore(objectMapper.convertValue(res, PlateRecognitionResponse.class));
+    }
+
+    private PlateResultDto getPlateWithMaxScore(PlateRecognitionResponse plateRecognitionResponse) {
+        return plateRecognitionResponse.getPlateResults()
+            .stream()
+            .max(Comparator.comparing(PlateResultDto::getScore))
+            .orElseThrow(() -> new NoSuchElementException("Element not found"));
     }
 
     private HttpHeaders setHeaders() {
@@ -54,3 +61,6 @@ public class RestClient {
     }
 
 }
+
+
+

@@ -35,6 +35,6 @@ public class Building {
 	private Set<Section> sections;
 	
 	@ManyToMany(mappedBy="buildings")
-	private Set<ParkingLot> parkingLot;
+	private Set<ParkingLot> parkingLots;
 
 }

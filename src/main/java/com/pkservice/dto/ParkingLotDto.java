@@ -19,4 +19,6 @@ public class ParkingLotDto {
     private Set<ParkingSlotDto> parkingSlots;
 
     private Set<BuildingDto> buildings;
+
+    private Long vacantParkingSlotsCount;
 }

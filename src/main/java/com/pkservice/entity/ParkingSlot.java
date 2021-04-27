@@ -32,6 +32,4 @@ public class ParkingSlot {
 	@ManyToOne
 	private ParkingLot parkingLot;
 
-	@ManyToOne
-	private DataSource dataSource;
 }
