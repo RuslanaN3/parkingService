@@ -25,18 +25,16 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
     @Override
     public List<ParkingLotDto> findAll() {
-        return modelMapper.map(parkingLotRepository.findAll(), new TypeToken<List<ParkingLotDto>>() {}.getType());
+        return modelMapper.map(parkingLotRepository.findAll(), new TypeToken<List<ParkingLotDto>>() {
+        }.getType());
     }
 
-    //@Override
-    //public List<ParkingLotDto> updateParkingLotStatusCamData(Long parkingLotId, ParkingLotDto parkingLotDto) {
-    //    ParkingLot parkingLotToUpdate = parkingLotRepository.findById(parkingLotId)
-    //        .orElseThrow(() -> new NoSuchElementException("Parking lot with id not found"));
-    //    Set<ParkingSlotCsvDto> newParkingSlots = parkingLotDto.getParkingSlots();
-    //    Set<ParkingSlot> parkingSlotsToUpdate = parkingLotToUpdate.getParkingSlots();
-    //    parkingSlotsToUpdate.stream().map(ps -> ps.setSlotState())
-    //
-    //
-    //    return null;
-    //}
+    @Override
+    public ParkingLotDto findById(Long id) {
+        ParkingLot parkingLot = parkingLotRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Element not found with id:" + id));
+        return modelMapper.map(parkingLot, ParkingLotDto.class);
+    }
+
+
 }

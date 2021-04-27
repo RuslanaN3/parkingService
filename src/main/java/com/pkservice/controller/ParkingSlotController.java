@@ -16,7 +16,7 @@ public class ParkingSlotController {
     @Autowired
     private ParkingSlotService parkingSlotService;
 
-    @PatchMapping("/sensors-data/{parkingLotId}")
+    @PatchMapping(value = "/sensors-data/{parkingLotId}")
     public ResponseEntity<ParkingLotUpdateDto> updateParkingSlotStatusSensorsData(@PathVariable Long parkingLotId) {
         return ResponseEntity.ok().body(parkingSlotService.updateParkingSlotStatuses(parkingLotId));
     }

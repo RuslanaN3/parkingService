@@ -5,10 +5,7 @@ import com.pkservice.service.ParkingLotService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/parking-lot")
@@ -22,14 +19,10 @@ public class ParkingLotController {
         return ResponseEntity.ok().body(parkingLotService.findAll());
     }
 
-
-
-
-    //
-    //@GetMapping("/{parkingLotId}")
-    //public ResponseEntity<ParkingLotDto> getParkingLot(){
-    //
-    //}
+    @GetMapping("/{id}")
+    public ResponseEntity<ParkingLotDto>  getParkingLot(@PathVariable Long id){
+        return ResponseEntity.ok().body(parkingLotService.findById(id));
+    }
 
     //
     //@GetMapping("/{buildingId}")

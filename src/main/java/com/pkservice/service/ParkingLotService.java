@@ -7,5 +7,5 @@ public interface ParkingLotService {
 
     List<ParkingLotDto> findAll();
 
-    //List<ParkingLotDto> updateParkingLotStatusCamData(Long parkingLotId, ParkingLotDto parkingLotDto);
+    ParkingLotDto findById(Long id);
 }

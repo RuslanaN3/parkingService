@@ -70,8 +70,8 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
             .collect(Collectors.toSet());
 
         Set<ParkingSlotDto> parkingSlotDtos = modelMapper
-            .map(parkingSlotRepository.saveAll(parkingSlotsUpdated), new TypeToken<Set<ParkingSlotDto>>() {
-            }.getType());
+            .map(parkingSlotRepository.saveAll(parkingSlotsUpdated),
+                new TypeToken<Set<ParkingSlotDto>>() {}.getType());
         return ParkingLotUpdateDto.builder().id(parkingLotId).parkingSlots(parkingSlotDtos).build();
     }
 
