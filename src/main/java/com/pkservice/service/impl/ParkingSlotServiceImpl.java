@@ -4,9 +4,11 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.pkservice.dto.ParkingLotUpdateDto;
 import com.pkservice.dto.ParkingSlotCsvDto;
 import com.pkservice.dto.ParkingSlotDto;
+import com.pkservice.entity.ParkingLot;
 import com.pkservice.entity.ParkingSlot;
 import com.pkservice.repository.ParkingSlotRepository;
 import com.pkservice.restClient.RestClient;
+import com.pkservice.service.ParkingLotService;
 import com.pkservice.service.ParkingSlotService;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +36,12 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
 
     @Autowired
     ModelMapper modelMapper;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    ParkingLotService parkingLotService;
 
     public ParkingLotUpdateDto updateParkingSlotStatuses(Long parkingLotId) {
         File file = null;
@@ -59,6 +68,7 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
         Set<ParkingSlot> parkingSlotsNew = parkingSlotDtos.stream()
             .map(bean -> modelMapper.map(bean, ParkingSlot.class))
             .collect(Collectors.toSet());
+
         return updateAllSlots(parkingLotId, parkingSlotsNew);
     }
 
@@ -72,6 +82,8 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
         Set<ParkingSlotDto> parkingSlotDtos = modelMapper
             .map(parkingSlotRepository.saveAll(parkingSlotsUpdated),
                 new TypeToken<Set<ParkingSlotDto>>() {}.getType());
+
+        messagingTemplate.convertAndSend("/topic/parking-slots-update", parkingLotService.findAll());
         return ParkingLotUpdateDto.builder().id(parkingLotId).parkingSlots(parkingSlotDtos).build();
     }
 

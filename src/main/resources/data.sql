@@ -9,7 +9,7 @@ VALUES (1, 'ground', 1),
 
 
 INSERT INTO parking_slot (id, slot_number, slot_status, parking_lot_id)
-VALUES (1, 609, 'VACANT', 1),
+VALUES (1, 196, 'VACANT', 1),
        (2, 197, 'VACANT', 1),
        (3, 198, 'VACANT', 1),
        (4, 199, 'VACANT', 1),
