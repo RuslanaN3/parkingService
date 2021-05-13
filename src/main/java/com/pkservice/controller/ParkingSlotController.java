@@ -27,10 +27,4 @@ public class ParkingSlotController {
         return ResponseEntity.ok().body(parkingSlotService.updateParkingSlotStatuses(parkingLotId, image));
     }
 
-    ////should not be there
-    //@PostMapping(value = "/car", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    //public ResponseEntity recognize(@RequestPart("image") MultipartFile image) {
-    //    return ResponseEntity.ok().body(parkingSlotService.recognise(image));
-    //}
-
 }

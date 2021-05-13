@@ -12,4 +12,5 @@ import lombok.*;
 public class PlateResultDto {
     String plate;
     Double score;
+    Boolean present;
 }

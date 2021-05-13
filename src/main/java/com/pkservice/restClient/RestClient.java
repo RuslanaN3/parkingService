@@ -48,10 +48,14 @@ public class RestClient {
     }
 
     private PlateResultDto getPlateWithMaxScore(PlateRecognitionResponse plateRecognitionResponse) {
-        return plateRecognitionResponse.getPlateResults()
-            .stream()
-            .max(Comparator.comparing(PlateResultDto::getScore))
-            .orElseThrow(() -> new NoSuchElementException("Element not found"));
+        if(plateRecognitionResponse.getPlateResults().isEmpty())
+            return PlateResultDto.builder().present(false).build();
+        PlateResultDto maxScorePlaterResultDto =  plateRecognitionResponse.getPlateResults()
+                                                    .stream()
+                                                    .max(Comparator.comparing(PlateResultDto::getScore))
+                                                    .orElseThrow(() -> new NoSuchElementException("Element not found"));
+        maxScorePlaterResultDto.setPresent(true);
+        return maxScorePlaterResultDto;
     }
 
     private HttpHeaders setHeaders() {

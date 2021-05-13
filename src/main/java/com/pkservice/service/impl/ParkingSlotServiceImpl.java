@@ -98,9 +98,4 @@ public class ParkingSlotServiceImpl implements ParkingSlotService {
     }
 
 
-    @Override
-    public Object recognise(MultipartFile image) {
-        return restClient.getPlateRecognitionResults(image);
-    }
-
 }

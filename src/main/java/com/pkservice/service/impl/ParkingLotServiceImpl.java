@@ -11,13 +11,11 @@ import com.pkservice.repository.BuildingRepository;
 import com.pkservice.repository.ParkingLotRepository;
 import com.pkservice.restClient.RestClient;
 import com.pkservice.service.ParkingLotService;
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,12 +32,18 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     ModelMapper modelMapper;
 
     @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
     RestClient restClient;
 
     @Override
     public List<ParkingLotDto> findAll() {
-        return modelMapper.map(parkingLotRepository.findAll(), new TypeToken<List<ParkingLotDto>>() {
+        List<ParkingLot> parkingLots = parkingLotRepository.findAll();
+        parkingLots.forEach(apk -> apk.setVacantParkingSlotsCount(countVacantSlots(apk.getParkingSlots())));
+        return modelMapper.map(parkingLots, new TypeToken<List<ParkingLotDto>>() {
         }.getType());
+
     }
 
     @Override
@@ -52,8 +56,19 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     @Override
     public ParkingLotSuitableDto getSuitableParkingLot(MultipartFile image) {
         PlateResultDto plateResultDto = restClient.getPlateRecognitionResults(image);
-        Building building = buildingRepository.findBuildingByVehicleLicensePlate(plateResultDto.getPlate());
-        Set<ParkingLot> availableParkingLots = building.getParkingLots();
+        if (!plateResultDto.getPresent()){
+            ParkingLotSuitableDto parkingLotSuitableDto = ParkingLotSuitableDto.builder().plateNotDetected(true).build();
+            messagingTemplate.convertAndSend("/topic/suitable-parking-slot", parkingLotSuitableDto);
+            return  parkingLotSuitableDto;
+        }
+        Optional<Building> building = buildingRepository.findBuildingByVehicleLicensePlate(plateResultDto.getPlate());
+        if(building.isEmpty()){
+            ParkingLotSuitableDto parkingLotSuitableDto = ParkingLotSuitableDto.builder().plateNotPresentInDB(true).build();
+            messagingTemplate.convertAndSend("/topic/suitable-parking-slot", parkingLotSuitableDto);
+            return  parkingLotSuitableDto;
+        }
+
+        Set<ParkingLot> availableParkingLots = building.get().getParkingLots();
 
         availableParkingLots
             .forEach(apk -> apk.setVacantParkingSlotsCount(countVacantSlots(apk.getParkingSlots())));
@@ -66,12 +81,18 @@ public class ParkingLotServiceImpl implements ParkingLotService {
             .stream()
             .filter(ps -> ps.getSlotStatus().equals(Status.VACANT))
             .findFirst().orElseThrow(() -> new NoSuchElementException("Element not found"));
-        return ParkingLotSuitableDto
+
+        ParkingLotSuitableDto parkingLotSuitableDto = ParkingLotSuitableDto
             .builder()
             .suitableParkingLotId(suitableParkingLot.getId())
             .suitableParkingSlotNumber(suitableParkingSlot.getSlotNumber())
-            .parkingLotDtos(modelMapper.map(availableParkingLots, new TypeToken<Set<ParkingLotDto>>() {}.getType()))
+            .parkingLotDtos(modelMapper.map(availableParkingLots, new TypeToken<Set<ParkingLotDto>>() {
+            }.getType()))
+            .plateNotDetected(false)
+            .plateNotPresentInDB(false)
             .build();
+        messagingTemplate.convertAndSend("/topic/suitable-parking-slot", parkingLotSuitableDto);
+        return parkingLotSuitableDto;
     }
 
     private long countVacantSlots(Set<ParkingSlot> parkingSlots) {

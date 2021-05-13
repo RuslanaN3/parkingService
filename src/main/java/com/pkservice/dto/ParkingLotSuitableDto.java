@@ -15,4 +15,8 @@ public class ParkingLotSuitableDto {
     Long suitableParkingSlotNumber;
 
     Set<ParkingLotDto> parkingLotDtos;
+
+    Boolean plateNotDetected;
+
+    Boolean plateNotPresentInDB;
 }
