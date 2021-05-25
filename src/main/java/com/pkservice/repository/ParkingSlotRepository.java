@@ -11,6 +11,5 @@ public interface ParkingSlotRepository extends JpaRepository<ParkingSlot, Long> 
 
     Set<ParkingSlot> findAllByParkingLot_Id(Long parkingLotId);
 
-    Optional<ParkingSlot> findBySlotNumber(Long slotNumber);
 
 }
