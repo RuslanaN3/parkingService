@@ -22,6 +22,9 @@ public class RestClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     public ParkingLotUpdateDto getParkingSlotsStatusPrediction(MultipartFile image) {
         String url = "http://localhost:5000/api/predict";
 
@@ -29,7 +32,6 @@ public class RestClient {
         fileValueMap.add("file", image.getResource());
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(fileValueMap, setHeaders());
         Object res = restTemplate.exchange(url, HttpMethod.POST, requestEntity, JsonNode.class).getBody();
-        ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.convertValue(res, ParkingLotUpdateDto.class);
     }
 
@@ -43,7 +45,6 @@ public class RestClient {
         fileValueMap.add("upload", image.getResource());
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(fileValueMap, headers);
         Object res = restTemplate.exchange(url, HttpMethod.POST, requestEntity, JsonNode.class).getBody();
-        ObjectMapper objectMapper = new ObjectMapper();
         return getPlateWithMaxScore(objectMapper.convertValue(res, PlateRecognitionResponse.class));
     }
 
