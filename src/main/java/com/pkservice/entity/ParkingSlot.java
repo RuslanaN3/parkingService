@@ -5,17 +5,15 @@ import com.pkservice.enums.Status;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name="parking_slot")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter	
+@Setter
+@Builder
 public class ParkingSlot {
 	
 	@Id

@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode
 public class ParkingSlotDto {
 
     private long slotNumber;

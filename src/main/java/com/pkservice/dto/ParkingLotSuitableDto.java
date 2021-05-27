@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = {"parkingLotDtos"})
 @Builder
 public class ParkingLotSuitableDto {
 
